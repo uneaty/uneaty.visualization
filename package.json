@@ -1,0 +1,23 @@
+{
+  "name": "uneaty.visualization",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uneaty/uneaty.visualization.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uneaty/uneaty.visualization/issues"
+  },
+  "dependencies": {
+    "uneaty.ai": "git+https://github.com/uneaty/uneaty.ai.git"
+  },
+  "homepage": "https://github.com/uneaty/uneaty.visualization#readme"
+}
