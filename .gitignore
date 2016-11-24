@@ -1,0 +1,6 @@
+
+
+# unity-packman
+node_modules/
+.packman/
+Assets/Plugins/packman-pkgs

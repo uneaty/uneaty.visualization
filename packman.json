@@ -1,0 +1,6 @@
+{
+  "name": "visualization",
+  "dependencies": [
+    "uneaty/uneaty.ai"
+  ]
+}
