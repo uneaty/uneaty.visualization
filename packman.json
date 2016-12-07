@@ -1,5 +1,6 @@
 {
-  "name": "visualization",
+  "name": "uneaty.visualization",
+  "export": "Assets",
   "dependencies": [
     "uneaty/uneaty.ai"
   ]
