@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using SharpNeat.Genomes.Neat;
 
 public class NeuralNetwork : MonoBehaviour

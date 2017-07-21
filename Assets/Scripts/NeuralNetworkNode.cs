@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using SharpNeat.Genomes.Neat;
 using SharpNeat.Network;
+using Random = UnityEngine.Random;
 
 public class NeuralNetworkNode : MonoBehaviour
 {
     private NeuronGene _gene;
-    private Material NodeMaterial;
+    private Material _nodeMaterial;
+    private Color _cachedColor;
+    private NodeType _cachedNodeType;
 
     public NeuronGene Gene
     {
@@ -14,38 +18,79 @@ public class NeuralNetworkNode : MonoBehaviour
         {
             _gene = value;
             GeneUpdated();
+            _cachedNodeType = Gene.NodeType;
         }
     }
 
     void GeneUpdated()
     {
-        name = "Node: " + _gene.Id;
-        transform.localPosition = Random.onUnitSphere * 2f;
+        name = "Node: " + _gene.Id + " " + Gene.NodeType;
+        if (!_cachedNodeType.Equals(Gene.NodeType))
+        {
+            Render();
+        }
     }
 
     public void Start()
     {
-        NodeMaterial = GetComponent<Renderer>().material;
+        _nodeMaterial = GetComponent<Renderer>().material;
+    }
+
+    public virtual void Render()
+    {
+        Vector3 position = GetPositionFromName();
+        Color color = Color.white;
+        Vector3 scaling = Vector3.one * 0.1f;
+
+        switch (Gene.NodeType)
+        {
+            case NodeType.Input:
+                position.x = Math.Abs(position.x) * 2;
+                color = Color.green;
+                break;
+            case NodeType.Output:
+                position.x = Math.Abs(position.x) * -2;
+                color = Color.red;
+                break;
+            case NodeType.Bias:
+                position.z = Math.Abs(position.z) * -1f;
+                color = Color.yellow;
+                break;
+            case NodeType.Hidden:
+                position.z = Math.Abs(position.z);
+                color = Color.blue;
+                break;
+            default:
+                Debug.Log("Encountered node: " + Gene.NodeType);
+                break;
+        }
+        _cachedColor = color;
+        transform.localPosition = position;
+        transform.localScale = scaling;
+    }
+
+    public virtual float UpdateValue()
+    {
+        float value = 0f;
+        if (Gene.AuxState != null)
+        {
+            foreach (double val in Gene.AuxState)
+            {
+                value += Mathf.Clamp((float) val, float.MinValue, float.MaxValue);
+            }
+        }
+        return value;
+    }
+
+    public virtual Vector3 GetPositionFromName()
+    {
+        Random.InitState(name.GetHashCode());
+        return new Vector3(Random.value, Random.value, Random.value);
     }
 
     public void Update()
     {
-        Color color = Color.white;
-        switch (Gene.NodeType)
-        {
-            case NodeType.Bias:
-                color = Color.blue;
-                break;
-            case NodeType.Input:
-                color = Color.green;
-                break;
-            case NodeType.Output:
-                color = Color.red;
-                break;
-            case NodeType.Hidden:
-                color = Color.Lerp(Color.red, Color.blue, .5f);
-                break;
-        }
-        NodeMaterial.SetColor("_EmissionColor", color);
+        _nodeMaterial.SetColor("_Color", _cachedColor);
+        _nodeMaterial.SetColor("_EmissionColor", _cachedColor);
     }
 }
